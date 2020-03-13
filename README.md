@@ -10,3 +10,6 @@ Ideally use nvm
 #### Current UI Dependencies being used:
 - Galio - https://galio.io/docs/#/README
 - Native Base - https://docs.nativebase.io/docs/GetStarted.html
+
+#### API's that need integration
+- Google Cloud Vision or Amazon Reckognition
