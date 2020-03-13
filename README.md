@@ -8,5 +8,5 @@ Ideally use nvm
 `yarn start`
 
 #### Current UI Dependencies being used:
-- Galio  - https://galio.io/docs/#/README
+- Galio - https://galio.io/docs/#/README
 - Native Base - https://docs.nativebase.io/docs/GetStarted.html
