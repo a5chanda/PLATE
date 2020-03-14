@@ -3,9 +3,11 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 
 // UI Imports
 import { Container, Text } from 'native-base';
+import {theme, withGalio, GalioProvider} from 'galio-framework';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';

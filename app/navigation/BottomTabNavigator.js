@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TabBarIcon from '../components/TabBarIcon';
 import BrowseScreen from '../screens/BrowseScreen';
 import SavedScreen from '../screens/SavedScreen';
-// import RewardsScreen from '../screens/RewardsScreen';
-// import HealthScreen from '../screens/HealthScreen';
+import RewardsScreen from '../screens/RewardsScreen';
+import HealthScreen from '../screens/HealthScreen';
 
 
 const BottomTab = createBottomTabNavigator();
@@ -23,7 +23,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={BrowseScreen}
         options={{
           title: 'Browse',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-code-working" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-search" />,
         }}
       />
       <BottomTab.Screen
@@ -31,23 +31,23 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={SavedScreen}
         options={{
           title: 'Saved',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-heart-empty" />,
         }}
       />
       <BottomTab.Screen
         name="Rewards"
-        component={SavedScreen}
+        component={RewardsScreen}
         options={{
           title: 'Rewards',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="wallet-giftcard" type="MaterialCommunity"/>,
         }}
       />
       <BottomTab.Screen
         name="Health"
-        component={SavedScreen}
+        component={HealthScreen}
         options={{
           title: 'Health',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="earth" type="MaterialCommunity"/>,
         }}
       />
     </BottomTab.Navigator>
@@ -59,8 +59,12 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case 'Home':
-      return 'How to get started';
-    case 'Links':
-      return 'Links to learn more';
+      return 'Recommended for You';
+    case 'Saved':
+      return 'Your Favourites';
+    case 'Rewards':
+      return 'Your Rewards';
+    case 'Health':
+        return 'Your Progress';
   }
 }
