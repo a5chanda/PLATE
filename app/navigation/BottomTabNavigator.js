@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+import BrowseScreen from '../screens/BrowseScreen';
+import SavedScreen from '../screens/SavedScreen';
+// import RewardsScreen from '../screens/RewardsScreen';
+// import HealthScreen from '../screens/HealthScreen';
+
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -17,25 +20,33 @@ export default function BottomTabNavigator({ navigation, route }) {
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
         name="Home"
-        component={HomeScreen}
+        component={BrowseScreen}
         options={{
-          title: 'Get Started',
+          title: 'Browse',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-code-working" />,
         }}
       />
       <BottomTab.Screen
-        name="Links"
-        component={LinksScreen}
+        name="Saved"
+        component={SavedScreen}
         options={{
-          title: 'Resources',
+          title: 'Saved',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
         }}
       />
       <BottomTab.Screen
-        name="New"
-        component={LinksScreen}
+        name="Rewards"
+        component={SavedScreen}
         options={{
-          title: 'New',
+          title: 'Rewards',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Health"
+        component={SavedScreen}
+        options={{
+          title: 'Health',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
         }}
       />
