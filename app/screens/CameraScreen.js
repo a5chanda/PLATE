@@ -1,32 +1,35 @@
-import React from 'react';
+import React from "react";
 import {
   ActivityIndicator,
   Button,
   Clipboard,
+  FlatList,
   Image,
+  Platform,
   Share,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-} from 'react-native';
-import { Constants, ImagePicker, Permissions } from 'expo';
-import uuid from 'uuid';
-import * as firebase from 'firebase';
+  ScrollView,
+  View
+} from "react-native";
+import { Constants} from "expo";
+import * as ImagePicker from "expo-image-picker"; 
+import * as Permissions from "expo-permissions";
+import uuid from "uuid";
+import Environment from "../config/environment";
+import firebase from "../utils/firebase";
 
 console.disableYellowBox = true;
-
-
-
-firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {
   state = {
     image: null,
     uploading: false,
+    googleResponse: null
   };
-  
+
   async componentDidMount() {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
     await Permissions.askAsync(Permissions.CAMERA);
@@ -36,33 +39,60 @@ export default class App extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        {image ? null : (
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 20,
-              textAlign: 'center',
-              marginHorizontal: 15,
-            }}>
-            Example: Upload ImagePicker result
-          </Text>
-        )}
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+        >
+          <View style={styles.welcomeContainer}>
+            <Image
+              source={
+                __DEV__
+                  ? require("../assets/images/robot-dev.png")
+                  : require("../assets/images/robot-prod.png")
+              }
+              style={styles.welcomeImage}
+            />
+          </View>
 
-        <Button
-          onPress={this._pickImage}
-          title="Pick an image from camera roll"
-        />
+          <View style={styles.getStartedContainer}>
+            {image ? null : (
+              <Text style={styles.getStartedText}>Google Cloud Vision</Text>
+            )}
+          </View>
 
-        <Button onPress={this._takePhoto} title="Take a photo" />
+          <View style={styles.helpContainer}>
+            <Button
+              onPress={this._pickImage}
+              title="Pick an image from camera roll"
+            />
 
-        {this._maybeRenderImage()}
-        {this._maybeRenderUploadingOverlay()}
-
-        <StatusBar barStyle="default" />
+            <Button onPress={this._takePhoto} title="Take a photo" />
+            {this.state.googleResponse && (
+              <FlatList
+                data={this.state.googleResponse.responses[0].labelAnnotations}
+                extraData={this.state}
+                keyExtractor={this._keyExtractor}
+                renderItem={({ item }) => <Text>Item: {item.description}</Text>}
+              />
+            )}
+            {this._maybeRenderImage()}
+            {this._maybeRenderUploadingOverlay()}
+          </View>
+        </ScrollView>
       </View>
     );
   }
+
+  organize = array => {
+    return array.map(function(item, i) {
+      return (
+        <View key={i}>
+          <Text>{item}</Text>
+        </View>
+      );
+    });
+  };
 
   _maybeRenderUploadingOverlay = () => {
     if (this.state.uploading) {
@@ -71,11 +101,12 @@ export default class App extends React.Component {
           style={[
             StyleSheet.absoluteFill,
             {
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              alignItems: 'center',
-              justifyContent: 'center',
-            },
-          ]}>
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center"
+            }
+          ]}
+        >
           <ActivityIndicator color="#fff" animating size="large" />
         </View>
       );
@@ -83,7 +114,7 @@ export default class App extends React.Component {
   };
 
   _maybeRenderImage = () => {
-    let { image } = this.state;
+    let { image, googleResponse } = this.state;
     if (!image) {
       return;
     }
@@ -91,51 +122,75 @@ export default class App extends React.Component {
     return (
       <View
         style={{
-          marginTop: 30,
+          marginTop: 20,
           width: 250,
           borderRadius: 3,
-          elevation: 2,
-        }}>
+          elevation: 2
+        }}
+      >
+        <Button
+          style={{ marginBottom: 10 }}
+          onPress={() => this.submitToGoogle()}
+          title="Analyze!"
+        />
+
         <View
           style={{
             borderTopRightRadius: 3,
             borderTopLeftRadius: 3,
-            shadowColor: 'rgba(0,0,0,1)',
+            shadowColor: "rgba(0,0,0,1)",
             shadowOpacity: 0.2,
             shadowOffset: { width: 4, height: 4 },
             shadowRadius: 5,
-            overflow: 'hidden',
-          }}>
+            overflow: "hidden"
+          }}
+        >
           <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
         </View>
-
         <Text
           onPress={this._copyToClipboard}
           onLongPress={this._share}
-          style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
-          {image}
-        </Text>
+          style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+        />
+
+        <Text>Raw JSON:</Text>
+
+        {googleResponse && (
+          <Text
+            onPress={this._copyToClipboard}
+            onLongPress={this._share}
+            style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+          >
+            JSON.stringify(googleResponse.responses)}
+          </Text>
+        )}
       </View>
     );
   };
 
+  _keyExtractor = (item, index) => item.id;
+
+  _renderItem = item => {
+    <Text>response: {JSON.stringify(item)}</Text>;
+  };
+
   _share = () => {
     Share.share({
-      message: this.state.image,
-      title: 'Check out this photo',
-      url: this.state.image,
+      message: JSON.stringify(this.state.googleResponse.responses),
+      title: "Check it out",
+      url: this.state.image
     });
   };
 
   _copyToClipboard = () => {
     Clipboard.setString(this.state.image);
-    alert('Copied image URL to clipboard');
+    alert("Copied to clipboard");
   };
 
   _takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 3]
     });
 
     this._handleImagePicked(pickerResult);
@@ -144,7 +199,7 @@ export default class App extends React.Component {
   _pickImage = async () => {
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 3]
     });
 
     this._handleImagePicked(pickerResult);
@@ -155,14 +210,64 @@ export default class App extends React.Component {
       this.setState({ uploading: true });
 
       if (!pickerResult.cancelled) {
-        uploadUrl = await uploadImageAsync(pickerResult.uri);
+        let uploadUrl = await uploadImageAsync(pickerResult.uri);
         this.setState({ image: uploadUrl });
       }
     } catch (e) {
       console.log(e);
-      alert('Upload failed, sorry :(');
+      alert("Upload failed, sorry :(");
     } finally {
       this.setState({ uploading: false });
+    }
+  };
+
+  submitToGoogle = async () => {
+    try {
+      this.setState({ uploading: true });
+      let { image } = this.state;
+      let body = JSON.stringify({
+        requests: [
+          {
+            features: [
+              { type: "LABEL_DETECTION", maxResults: 10 },
+              { type: "LANDMARK_DETECTION", maxResults: 5 },
+              { type: "FACE_DETECTION", maxResults: 5 },
+              { type: "LOGO_DETECTION", maxResults: 5 },
+              { type: "TEXT_DETECTION", maxResults: 5 },
+              { type: "DOCUMENT_TEXT_DETECTION", maxResults: 5 },
+              { type: "SAFE_SEARCH_DETECTION", maxResults: 5 },
+              { type: "IMAGE_PROPERTIES", maxResults: 5 },
+              { type: "CROP_HINTS", maxResults: 5 },
+              { type: "WEB_DETECTION", maxResults: 5 }
+            ],
+            image: {
+              source: {
+                imageUri: image
+              }
+            }
+          }
+        ]
+      });
+      let response = await fetch(
+        "https://vision.googleapis.com/v1/images:annotate?key=" +
+          Environment["GOOGLE_CLOUD_VISION_API_KEY"],
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          method: "POST",
+          body: body
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      this.setState({
+        googleResponse: responseJson,
+        uploading: false
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 }
@@ -177,10 +282,10 @@ async function uploadImageAsync(uri) {
     };
     xhr.onerror = function(e) {
       console.log(e);
-      reject(new TypeError('Network request failed'));
+      reject(new TypeError("Network request failed"));
     };
-    xhr.responseType = 'blob';
-    xhr.open('GET', uri, true);
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
     xhr.send(null);
   });
 
@@ -195,3 +300,49 @@ async function uploadImageAsync(uri) {
 
   return await snapshot.ref.getDownloadURL();
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingBottom: 10
+  },
+  developmentModeText: {
+    marginBottom: 20,
+    color: "rgba(0,0,0,0.4)",
+    fontSize: 14,
+    lineHeight: 19,
+    textAlign: "center"
+  },
+  contentContainer: {
+    paddingTop: 30
+  },
+  welcomeContainer: {
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 20
+  },
+  welcomeImage: {
+    width: 100,
+    height: 80,
+    resizeMode: "contain",
+    marginTop: 3,
+    marginLeft: -10
+  },
+  getStartedContainer: {
+    alignItems: "center",
+    marginHorizontal: 50
+  },
+
+  getStartedText: {
+    fontSize: 17,
+    color: "rgba(96,100,109, 1)",
+    lineHeight: 24,
+    textAlign: "center"
+  },
+
+  helpContainer: {
+    marginTop: 15,
+    alignItems: "center"
+  }
+});

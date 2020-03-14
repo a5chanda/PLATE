@@ -5,6 +5,7 @@ import BrowseScreen from '../screens/BrowseScreen';
 import SavedScreen from '../screens/SavedScreen';
 import RewardsScreen from '../screens/RewardsScreen';
 import HealthScreen from '../screens/HealthScreen';
+import CameraScreen from '../screens/CameraScreen';
 
 
 const BottomTab = createBottomTabNavigator();
@@ -36,7 +37,7 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name="Rewards"
-        component={RewardsScreen}
+        component={CameraScreen}
         options={{
           title: 'Rewards',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="wallet-giftcard" type="MaterialCommunity"/>,
