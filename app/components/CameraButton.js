@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 function CameraRouter({ navigation }) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-         <Button primary onPress={() => navigation.navigate('Details')}><Text> Camera </Text></Button>
+         <Button primary onPress={() => navigation.navigate('Details')}><Text> Upload for Rewards </Text></Button>
       </View>
     );
 }
@@ -18,7 +18,9 @@ function CameraRouter({ navigation }) {
 export default function CameraButton({ navigation }) {
   return (
     <NavigationContainer independent={true}>
-    <Stack.Navigator initialRouteName="Camera">
+    <Stack.Navigator initialRouteName="Camera" screenOptions={{
+    headerShown: false
+  }}>
       <Stack.Screen name="Camera" component={CameraRouter} />
       <Stack.Screen name="Details" component={CameraScreen} />
     </Stack.Navigator>

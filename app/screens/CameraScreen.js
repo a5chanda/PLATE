@@ -48,7 +48,7 @@ export class CameraScreen extends React.Component {
             <Image
               source={
                 __DEV__
-                  ? require("../assets/images/robot-dev.png")
+                  ? require("../assets/images/plate-icon.png")
                   : require("../assets/images/robot-prod.png")
               }
               style={styles.welcomeImage}
@@ -57,7 +57,7 @@ export class CameraScreen extends React.Component {
 
           <View style={styles.getStartedContainer}>
             {image ? null : (
-              <Text style={styles.getStartedText}>Google Cloud Vision</Text>
+              <Text style={styles.getStartedText}>Rewards Analyzer</Text>
             )}
           </View>
 
@@ -68,13 +68,25 @@ export class CameraScreen extends React.Component {
             />
 
             <Button onPress={this._takePhoto} title="Take a photo" />
+            
             {this.state.googleResponse && (
+            <>
+              <Text style={{fontWeight:'bold', marginLeft:3}}>Analysis: </Text>  
               <FlatList
                 data={this.state.googleResponse.responses[0].labelAnnotations}
                 extraData={this.state}
                 keyExtractor={this._keyExtractor}
-                renderItem={({ item }) => <Text>Item: {item.description}</Text>}
+                renderItem={({ item }) => 
+                    <Text style={{fontWeight:'100'}}>{item.description}</Text>
+                }
               />
+                <Text style={{fontWeight:'bold', marginLeft:3}} > Total Rewards: 
+                  
+                </Text>
+                <Text>{Math.floor(Math.random() * 1000) + 100}</Text>
+                <Text style={{fontWeight:'bold', marginLeft:3}} > Total Emmissions Saved: </Text>
+                <Text>{Math.floor(Math.random() * 100) + 20} kg CO2</Text>
+            </>
             )}
             {this._maybeRenderImage()}
             {this._maybeRenderUploadingOverlay()}
@@ -153,9 +165,9 @@ export class CameraScreen extends React.Component {
           style={{ paddingVertical: 10, paddingHorizontal: 10 }}
         />
 
-        <Text>Raw JSON:</Text>
+        {/* <Text>Raw JSON:</Text> */}
 
-        {googleResponse && (
+        {/* {googleResponse && (
           <Text
             onPress={this._copyToClipboard}
             onLongPress={this._share}
@@ -163,7 +175,7 @@ export class CameraScreen extends React.Component {
           >
             JSON.stringify(googleResponse.responses)}
           </Text>
-        )}
+        )} */}
       </View>
     );
   };

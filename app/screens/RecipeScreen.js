@@ -1,7 +1,7 @@
   
 import React from 'react';
 import { StyleSheet, View,  } from 'react-native';
-import { FlatList } from "react-native";
+import { FlatList, Image } from "react-native";
 import { Text, ListItem, Left, Body, Icon, Right, Title } from "native-base";
 import CameraButton from "../components/CameraButton";
 
@@ -21,19 +21,42 @@ const globalStyles = StyleSheet.create({
       flex: 1,
       padding: 20,
     },
+    image: {
+        borderRadius: 10,
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        
+    },
+    item: {
+        marginVertical: 6,
+        marginHorizontal: 16,
+    },
+    itemText: {
+        fontSize: 15,
+        marginLeft:3,
+        fontWeight:"200"
+    },
+    title: {
+        fontSize: 15,
+        marginLeft:3,
+        fontWeight:"400"
+    },
+    title2: {
+        fontSize: 15,
+        marginLeft:3,
+        fontWeight:"400"
+    },
   });
 
-  renderItem = ({ item }) => {
-
-      return (
-        <ListItem style={{ marginLeft: 0 }}>
-          <Body>
-            <Text>{item}</Text>
-          </Body>
-        </ListItem>
-      );
-    
-  };
+function Item({ title }) {
+    return (
+        <View style={globalStyles.item}>
+        <Text style={globalStyles.itemText}>{title}</Text>
+        </View>
+    );
+}
 
 
 export default function RecipeScreen( recipe ) {
@@ -41,28 +64,29 @@ export default function RecipeScreen( recipe ) {
     let ingredients = recipe.route['params']['ingredients'];
     return (
         <View style={globalStyles.container}>
-            <CameraButton></CameraButton>
+            <Image style={globalStyles.image} source = { {uri: recipe.route['params']['image']} }/>
             <Card>
                 <Text style={globalStyles.titleText}>
                 { recipe.route['params']['name'] }
                 </Text>
+                <Text style={globalStyles.title}>
+                {"Cooking Time: " + 
+                recipe.route['params']['cookTime'] + 
+                " Minutes"}
+                </Text>
+                <Text style={globalStyles.title2}>
+                    Ingredients:
+                </Text>
                 <FlatList
                     data={recipe.route['params']['ingredients']}
-                    renderItem={({ ingredient }) =>{
-                        <ListItem style={{ marginLeft: 0 }}>
-                            
-                            <Text>{ingredient}</Text>
-                            
-                        </ListItem>
-                    }}
-                    
+                    renderItem={({ item }) => <Item title={"• " + item} />}
+                    keyExtractor={item => item.id}
                 />
-
-                
-                <Text>{ recipe.route['params']['ingredients'] }</Text>
-                <Text>{ recipe.route['params']['cookTime'] }</Text> 
-                <Text>{ recipe.route['params']['image'] }</Text>
             </Card>
+            <CameraButton style={{borderRadius: 10}}></CameraButton>
+            
+            
+            
         </View>
   );
 }
