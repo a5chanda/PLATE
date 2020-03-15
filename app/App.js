@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 
 // UI Imports
-import { Container, Text } from 'native-base';
-import {theme, withGalio, GalioProvider} from 'galio-framework';
+
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -69,6 +68,8 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F7F5F5',
+    shadowOpacity: 0,
+    borderBottomWidth: 0
   },
 });
