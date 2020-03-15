@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
@@ -12,14 +12,28 @@ import {RecipeCard} from '../components/shared/RecipeCard';
 import {Card, theme} from "galio-framework";
 
 export default function RewardsScreen() {
+  
   return (  
-      
      <ScrollView>
-    <RecipeCard></RecipeCard>
+       <TouchableOpacity
+         style={styles.button}
+         onPress={() => {
+          // console.log("YOU PRESSED CARD!!!");
+          
+        }}
+       >
+         <RecipeCard>
+         </RecipeCard>
+       </TouchableOpacity>
     </ScrollView>  
-   
   );
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 10
+  }
+});
 
