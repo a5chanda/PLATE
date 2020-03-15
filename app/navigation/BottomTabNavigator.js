@@ -5,6 +5,7 @@ import BrowseScreen from '../screens/BrowseScreen';
 import SavedScreen from '../screens/SavedScreen';
 import RewardsScreen from '../screens/RewardsScreen';
 import HealthScreen from '../screens/HealthScreen';
+import TempScreen from '../screens/TempScreen';
 import CameraScreen from '../screens/CameraScreen';
 
 
@@ -65,7 +66,7 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name="Health"
-        component={HealthScreen}
+        component={TempScreen}
         options={{
           title: 'Health',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="earth" type="MaterialCommunity"/>,

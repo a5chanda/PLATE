@@ -1,21 +1,24 @@
-import React from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import RecipeCard from '../components/shared/RecipeCard'
+
 import Constants from 'expo-constants';
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-];
+const globalStyles = StyleSheet.create({
+    titleText: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#333',
+    },
+    paragraph: {
+      marginVertical: 8,
+      lineHeight: 20,
+    },
+    container: {
+      flex: 1,
+      padding: 20,
+    },
+  });
 
 function Item({ title }) {
   return (
@@ -25,15 +28,23 @@ function Item({ title }) {
   );
 }
 
-export default function App() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => <Item title={item.title} />}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
+export default function SavedScreen({navigation}) {
+
+    const [reviews, setReviews] = useState([
+        { title: 'Zelda, Breath of Fresh Air', rating: 5, body: 'lorem ipsum', key: '1' },
+        { title: 'Gotta Catch Them All (again)', rating: 4, body: 'lorem ipsum', key: '2' },
+        { title: 'Not So "Final" Fantasy', rating: 3, body: 'lorem ipsum', key: '3' },
+      ]);
+    return (
+    <View style={styles.container}>
+      <FlatList data={reviews} renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => navigation.navigate('RecipeScreen', item)}>
+          <RecipeCard>
+            
+          </RecipeCard>
+        </TouchableOpacity>
+      )} />
+    </View>
   );
 }
 

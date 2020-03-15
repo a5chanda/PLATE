@@ -7,26 +7,16 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {CameraScreen} from './CameraScreen';
-import CameraButton from '../components/CameraButton';
-import {RecipeCard} from '../components/shared/RecipeCard';
+// import CameraButton from '../components/CameraButton';
+import RecipeCard from '../components/shared/RecipeCard';
 import {Card, theme} from "galio-framework";
+
 
 export default function RewardsScreen() {
   
-  return (  
-     <ScrollView>
-       <TouchableOpacity
-         style={styles.button}
-         onPress={() => {
-          // console.log("YOU PRESSED CARD!!!");
-          
-        }}
-       >
-         <RecipeCard>
-         </RecipeCard>
-       </TouchableOpacity>
-    </ScrollView>  
-  );
+    return (  
+        <RecipeCard></RecipeCard>
+    );
 }
 
 const styles = StyleSheet.create({
