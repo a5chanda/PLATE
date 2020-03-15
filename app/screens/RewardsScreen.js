@@ -1,16 +1,29 @@
+// import * as React from 'react';
+// import { Button, View, Text } from 'react-native';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import {CameraScreen} from './CameraScreen';
+
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+//import CameraButton from '../components/CameraButton';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import {CameraScreen} from './CameraScreen';
+import CameraButton from '../components/CameraButton';
+
+
 
 export default function RewardsScreen() {
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-
-    </ScrollView>
+  return (     
+    <CameraButton></CameraButton>
   );
 }
+
 
 
 

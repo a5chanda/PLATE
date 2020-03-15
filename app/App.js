@@ -68,6 +68,8 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F7F5F5',
+    shadowOpacity: 0,
+    borderBottomWidth: 0
   },
 });

@@ -23,7 +23,7 @@ import firebase from "../utils/firebase";
 
 console.disableYellowBox = true;
 
-export default class App extends React.Component {
+export class CameraScreen extends React.Component {
   state = {
     image: null,
     uploading: false,
